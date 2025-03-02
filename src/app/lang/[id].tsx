@@ -1,10 +1,12 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import OpenAI from "openai";
 import { useState } from "react";
 import {
+  ActivityIndicator,
+  Alert,
   FlatList,
   SafeAreaView,
   Text,
@@ -46,43 +48,52 @@ const LangScreen = () => {
     null
   );
 
-  const handleSubmit = async () => {
-    if (!data?.name) return;
-    const option = ListVerbs?.find((e) => e?.id === optionVerbTenseId);
-    if (!option) return;
+  const mutate = useMutation({
+    mutationKey: ["quiz_create_submit", data?.name, optionVerbTenseId, refetch],
+    mutationFn: async () => {
+      if (!data?.name) return;
+      const option = ListVerbs?.find((e) => e?.id === optionVerbTenseId);
+      if (!option) return;
 
-    try {
-      const chatCompletion = await client.chat.completions.create({
-        messages: [
-          {
-            role: "user",
-            content: createPrompt(data?.name, option?.name),
-          },
-        ], // Aquí el cambio
+      try {
+        const chatCompletion = await client.chat.completions.create({
+          messages: [
+            {
+              role: "user",
+              content: createPrompt(data?.name, option?.name),
+            },
+          ], // Aquí el cambio
 
-        model: "gpt-4o-mini",
-      });
-
-      const csv = chatCompletion.choices[0]?.message?.content?.trim?.() ?? "";
-      const questions = await convertCSVToArray(csv, data?.id);
-
-      const quiz = await createQuiz(db, {
-        language_id: data?.id,
-        title: `${data?.name} Quiz #${DataListQuiz?.length ?? 1}`,
-        subtitle: `${option?.name}`,
-      });
-      for (const iterator of questions) {
-        await createQuestionQuiz(db, {
-          ...iterator,
-          quiz_id: quiz?.id,
+          model: "gpt-4o-mini",
         });
+
+        const csv = chatCompletion.choices[0]?.message?.content?.trim?.() ?? "";
+        const questions = await convertCSVToArray(csv, data?.id);
+
+        const quiz = await createQuiz(db, {
+          language_id: data?.id,
+          title: `${data?.name} Quiz #${DataListQuiz?.length ?? 1}`,
+          subtitle: `${option?.name}`,
+        });
+        for (const iterator of questions) {
+          await createQuestionQuiz(db, {
+            ...iterator,
+            quiz_id: quiz?.id,
+          });
+        }
+        await refetch();
+      } catch (error) {
+        const text = `Error in ChatGPT API:, ${error}`;
+        console.log(text);
       }
-      await refetch();
-    } catch (error) {
-      const text = `Error in ChatGPT API:, ${error}`;
-      console.log(text);
-    }
-  };
+    },
+    onSuccess: () => {
+      Alert.alert("Successfully", "The quiz has been created");
+    },
+    onError: () => {
+      Alert.alert("Error", "The quiz could'nt be created");
+    },
+  });
 
   return (
     <SafeAreaView
@@ -159,21 +170,29 @@ const LangScreen = () => {
                           height: "auto",
                         }}
                         disabled={isDisabled}
-                        onPress={handleSubmit}
+                        onPress={() => mutate?.mutateAsync()}
                       >
-                        <Ionicons
-                          name="add-circle"
-                          size={16}
-                          color={isDisabled ? "gray" : "#F6F6F6"}
-                        />
-                        <Text
-                          style={{
-                            color: isDisabled ? "gray" : "#F6F6F6",
-                            fontWeight: "700",
-                          }}
-                        >
-                          Create
-                        </Text>
+                        {mutate?.isPending ? (
+                          <>
+                            <ActivityIndicator size={"small"} color={"white"} />
+                          </>
+                        ) : (
+                          <>
+                            <Ionicons
+                              name="add-circle"
+                              size={16}
+                              color={isDisabled ? "gray" : "#F6F6F6"}
+                            />
+                            <Text
+                              style={{
+                                color: isDisabled ? "gray" : "#F6F6F6",
+                                fontWeight: "700",
+                              }}
+                            >
+                              Create
+                            </Text>
+                          </>
+                        )}
                       </TouchableOpacity>
                     );
                   })()}
