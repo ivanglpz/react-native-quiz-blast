@@ -1,7 +1,5 @@
 export const schema = `
 PRAGMA foreign_keys = ON;
-DROP TABLE IF EXISTS languages;
-DROP TABLE IF EXISTS verb_tenses;
 
 CREATE TABLE IF NOT EXISTS languages (
     id TEXT PRIMARY KEY NOT NULL, -- UUID
