@@ -20,10 +20,10 @@ type Props = {
   label: string;
   value?: string | null;
   onChange?: (newValue: Option) => void;
-  options: Option[];
+  options: Option[] | null | undefined;
 };
 export const Input = (props: Props) => {
-  const { label, onChange, options, value } = props;
+  const { label, onChange, options = [], value } = props;
 
   const [showOptions, setShowOptions] = useState(false);
 
@@ -36,7 +36,7 @@ export const Input = (props: Props) => {
       >
         <View>
           <Text>
-            {options?.find((e) => e.value === value)?.label ??
+            {options?.find?.((e) => e.value === value)?.label ??
               "Select an option"}
           </Text>
         </View>

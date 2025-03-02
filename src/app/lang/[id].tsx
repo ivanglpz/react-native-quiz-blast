@@ -2,6 +2,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
+import { useState } from "react";
 import { SafeAreaView, Text, TouchableOpacity, View } from "react-native";
 import { InputSelect } from "../../components/input_select";
 import { Gap } from "../../constants/styles";
@@ -20,7 +21,8 @@ const LangScreen = () => {
     queryKey: ["verbs", db, params?.id],
     queryFn: () => listVerbsById(db, params?.id),
   });
-
+  const [optionVerbTense, setoptionVerbTense] = useState<string | null>(null);
+  const handleSubmit = async () => {};
   return (
     <SafeAreaView
       style={{
@@ -60,40 +62,53 @@ const LangScreen = () => {
         >
           <InputSelect
             label="Verb Tense"
-            value={ListVerbs?.[3]?.id}
-            options={[
-              ...(ListVerbs?.map((e) => {
-                return {
-                  id: e?.id,
-                  label: e?.name,
-                  value: e?.id,
-                };
-              }) ?? []),
-            ]}
-          />
-          <TouchableOpacity
-            style={{
-              backgroundColor: "#151515",
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              padding: 10,
-              gap: 6,
-              borderRadius: 6,
-              width: "auto",
-              height: "auto",
+            value={optionVerbTense}
+            onChange={(v) => {
+              setoptionVerbTense(v?.value);
             }}
-          >
-            <Ionicons name="add-circle" size={16} color="#F6F6F6" />
-            <Text
-              style={{
-                color: "#F6F6F6",
-                fontWeight: "700",
-              }}
-            >
-              Create
-            </Text>
-          </TouchableOpacity>
+            options={ListVerbs?.map((e) => {
+              return {
+                id: e?.id,
+                label: e?.name,
+                value: e?.id,
+              };
+            })}
+          />
+          {(() => {
+            const isDisabled =
+              optionVerbTense === null || optionVerbTense === undefined;
+            return (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: isDisabled ? "#e0e0e0" : "#151515",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 10,
+                  gap: 6,
+                  borderRadius: 6,
+                  width: "auto",
+                  height: "auto",
+                }}
+                disabled={isDisabled}
+                onPress={handleSubmit}
+              >
+                <Ionicons
+                  name="add-circle"
+                  size={16}
+                  color={isDisabled ? "gray" : "#F6F6F6"}
+                />
+                <Text
+                  style={{
+                    color: isDisabled ? "gray" : "#F6F6F6",
+                    fontWeight: "700",
+                  }}
+                >
+                  Create
+                </Text>
+              </TouchableOpacity>
+            );
+          })()}
         </View>
       </View>
     </SafeAreaView>
