@@ -83,7 +83,6 @@ const LangScreen = () => {
       console.log(text);
     }
   };
-  console.log(DataListQuiz?.[0]?.title);
 
   return (
     <SafeAreaView
