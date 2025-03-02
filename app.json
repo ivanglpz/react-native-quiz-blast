@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "react_native_toast",
-    "slug": "react_native_toast",
+    "name": "react_native_quiz_blast",
+    "slug": "react_native_quiz_blast",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.test.react_native_quiz_blast"
     },
     "web": {
       "favicon": "./assets/favicon.png"
