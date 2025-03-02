@@ -227,7 +227,8 @@ const LangScreen = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={{
-                      padding: 12,
+                      paddingVertical: 8,
+                      paddingHorizontal: 15,
                       backgroundColor: "#87E561",
                       borderRadius: 6,
                       display: "flex",
