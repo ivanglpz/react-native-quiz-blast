@@ -2,6 +2,7 @@
   "expo": {
     "name": "react_native_quiz_blast",
     "slug": "react_native_quiz_blast",
+    "scheme": "quiz_blast",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
