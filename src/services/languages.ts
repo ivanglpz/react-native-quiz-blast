@@ -6,3 +6,10 @@ export const listLanguages = async (
 ): Promise<Language[]> => {
   return await db.getAllAsync("SELECT * FROM languages");
 };
+
+export const fetchLanguage = async (
+  db: SQLiteDatabase,
+  id: string
+): Promise<Language | null> => {
+  return await db.getFirstAsync("SELECT * FROM languages WHERE id = ?;", [id]);
+};

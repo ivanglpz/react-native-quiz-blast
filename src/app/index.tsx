@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import {
   FlatList,
@@ -16,6 +17,7 @@ const HomeScreen = () => {
     queryKey: ["languages", db],
     queryFn: () => listLanguages(db),
   });
+  const router = useRouter();
 
   return (
     <SafeAreaView
@@ -43,7 +45,12 @@ const HomeScreen = () => {
           keyExtractor={(i) => i.id}
           renderItem={({ item }) => {
             return (
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => {
+                  router.push(`/lang/${item?.id}`);
+                }}
+              >
                 <Text style={styles.button_text}>{item?.name}</Text>
               </TouchableOpacity>
             );
