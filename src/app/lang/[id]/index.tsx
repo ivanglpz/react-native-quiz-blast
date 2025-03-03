@@ -1,6 +1,6 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import OpenAI from "openai";
 import { useState } from "react";
@@ -33,6 +33,7 @@ const client = new OpenAI({
 const LangScreen = () => {
   const params = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();
+  const router = useRouter();
 
   const { data } = useQuery({
     queryKey: ["lang", db, params?.id],
@@ -258,6 +259,9 @@ const LangScreen = () => {
                       flexDirection: "row",
                       alignItems: "center",
                       gap: 6,
+                    }}
+                    onPress={() => {
+                      router.push(`/lang/${data?.id}/quiz/${item?.id}/start`);
                     }}
                   >
                     <Ionicons name="play" size={18} color="black" />
