@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { PrimitiveAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
@@ -18,6 +18,7 @@ import {
   WithInitialValue,
 } from "../../../jotai/quiz";
 import { fetchQuestions } from "../../../services/questions";
+import { fetchQuiz } from "../../../services/quiz";
 
 type Item = {
   item: {
@@ -75,9 +76,9 @@ const QuestionItem = ({ item, index }: Item) => {
                 borderRadius: 6,
                 borderWidth: 1,
                 borderColor:
-                  answer?.selected_option === e ? "#4acb46" : "black",
+                  answer?.selected_option === e ? "#46becb" : "black",
                 backgroundColor:
-                  answer?.selected_option === e ? "#a2e588" : "transparent",
+                  answer?.selected_option === e ? "#88dce5" : "white",
               }}
             >
               <Text>{e}</Text>
@@ -93,8 +94,15 @@ const ScreenStartQuiz = () => {
   const local = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();
 
+  const { data: Quiz } = useQuery({
+    queryKey: ["quiz", local?.id],
+    queryFn: () => fetchQuiz(db, local?.id),
+  });
+  console.log(Quiz);
+
   const questions = useAtomValue(GET_QUIZ_QUESTIONS_ATOM);
   const setFormQuestions = useSetAtom(SET_QUIZ_QUESTIONS_ATOM);
+
   const mutateFetchQuestions = useMutation({
     mutationKey: ["fetching_questions", local?.id, db],
     mutationFn: async () => {
@@ -125,8 +133,28 @@ const ScreenStartQuiz = () => {
           data={questions ?? []}
           ListHeaderComponent={() => {
             return (
-              <View>
-                <Text>test</Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginBottom: 15,
+                }}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 22,
+                  }}
+                >
+                  {Quiz?.title}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 17,
+                  }}
+                >
+                  {Quiz?.subtitle}
+                </Text>
               </View>
             );
           }}

@@ -65,3 +65,10 @@ export const listQuiz = async (
   )) as Quiz[];
   return data?.reverse();
 };
+
+export const fetchQuiz = async (
+  db: SQLiteDatabase,
+  id: string
+): Promise<Quiz | null> => {
+  return await db.getFirstAsync("SELECT * FROM quizzes WHERE id = ?;", [id]);
+};
