@@ -1,13 +1,112 @@
-import { useGlobalSearchParams, useLocalSearchParams } from "expo-router";
-import { SafeAreaView, Text, View } from "react-native";
+import { useMutation } from "@tanstack/react-query";
+import { useLocalSearchParams } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
+import { PrimitiveAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useEffect } from "react";
+import {
+  FlatList,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Gap } from "../../../constants/styles";
+import { Answer, Question } from "../../../db/types";
+import {
+  GET_QUIZ_QUESTIONS_ATOM,
+  SET_QUIZ_QUESTIONS_ATOM,
+  WithInitialValue,
+} from "../../../jotai/quiz";
+import { fetchQuestions } from "../../../services/questions";
+
+type Item = {
+  item: {
+    question: Question;
+    answer: PrimitiveAtom<Partial<Answer> | null> &
+      WithInitialValue<Partial<Answer> | null>;
+    id: string;
+  };
+  index: number;
+};
+
+const QuestionItem = ({ item, index }: Item) => {
+  const [answer, setAnswer] = useAtom(item?.answer);
+  return (
+    <View
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+      }}
+    >
+      <Text>
+        {index + 1}.{item?.question?.question}
+      </Text>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          gap: 6,
+        }}
+      >
+        {[
+          item?.question?.option_one,
+          item?.question?.option_two,
+          item?.question?.option_three,
+        ]?.map((e) => {
+          return (
+            <TouchableOpacity
+              key={`${e}${item?.id}${item?.question?.id}`}
+              onPress={() => {
+                setAnswer({
+                  selected_option: e,
+                  is_correct:
+                    item?.question[item?.question?.answer as keyof Question] ===
+                    e,
+                  attempt_id: undefined,
+                  id: "",
+                  question_id: item?.question?.id,
+                });
+              }}
+              style={{
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                borderRadius: 6,
+                borderWidth: 1,
+                borderColor:
+                  answer?.selected_option === e ? "#4acb46" : "black",
+                backgroundColor:
+                  answer?.selected_option === e ? "#a2e588" : "transparent",
+              }}
+            >
+              <Text>{e}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+};
 
 const ScreenStartQuiz = () => {
-  const glob = useGlobalSearchParams();
-  const local = useLocalSearchParams();
+  const local = useLocalSearchParams<{ id: string }>();
+  const db = useSQLiteContext();
 
-  console.log("Local:", local, "Global:", glob);
+  const questions = useAtomValue(GET_QUIZ_QUESTIONS_ATOM);
+  const setFormQuestions = useSetAtom(SET_QUIZ_QUESTIONS_ATOM);
+  const mutateFetchQuestions = useMutation({
+    mutationKey: ["fetching_questions", local?.id, db],
+    mutationFn: async () => {
+      const response = await fetchQuestions(db, local?.id);
+      setFormQuestions(response);
+    },
+  });
 
+  useEffect(() => {
+    if (!local?.id) return;
+    mutateFetchQuestions?.mutateAsync();
+  }, [local?.id]);
   return (
     <SafeAreaView
       style={{
@@ -22,7 +121,27 @@ const ScreenStartQuiz = () => {
           padding: 20,
         }}
       >
-        <Text>test</Text>
+        <FlatList
+          data={questions ?? []}
+          ListHeaderComponent={() => {
+            return (
+              <View>
+                <Text>test</Text>
+              </View>
+            );
+          }}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                height: 20,
+              }}
+            />
+          )}
+          keyExtractor={(i) => i?.id}
+          renderItem={({ item, index }) => {
+            return <QuestionItem item={item} index={index} />;
+          }}
+        />
       </View>
     </SafeAreaView>
   );
