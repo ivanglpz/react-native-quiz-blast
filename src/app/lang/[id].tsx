@@ -13,16 +13,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { InputSelect } from "../../../components/input_select";
-import { Gap } from "../../../constants/styles";
-import { fetchLanguage } from "../../../services/languages";
-import { convertCSVToArray, createPrompt } from "../../../services/openia";
-import {
-  createQuestionQuiz,
-  createQuiz,
-  listQuiz,
-} from "../../../services/quiz";
-import { listVerbsById } from "../../../services/verbs";
+import { InputSelect } from "../../components/input_select";
+import { Gap } from "../../constants/styles";
+import { fetchLanguage } from "../../services/languages";
+import { convertCSVToArray, createPrompt } from "../../services/openia";
+import { createQuestionQuiz, createQuiz, listQuiz } from "../../services/quiz";
+import { listVerbsById } from "../../services/verbs";
 
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
@@ -261,7 +257,7 @@ const LangScreen = () => {
                       gap: 6,
                     }}
                     onPress={() => {
-                      router.push(`/lang/${data?.id}/quiz/${item?.id}/start`);
+                      router.push(`/quiz/${item?.id}/start`);
                     }}
                   >
                     <Ionicons name="play" size={18} color="black" />
