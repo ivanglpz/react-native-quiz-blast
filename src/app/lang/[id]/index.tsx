@@ -13,12 +13,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { InputSelect } from "../../components/input_select";
-import { Gap } from "../../constants/styles";
-import { fetchLanguage } from "../../services/languages";
-import { convertCSVToArray, createPrompt } from "../../services/openia";
-import { createQuestionQuiz, createQuiz, listQuiz } from "../../services/quiz";
-import { listVerbsById } from "../../services/verbs";
+import { InputSelect } from "../../../components/input_select";
+import { Gap } from "../../../constants/styles";
+import { fetchLanguage } from "../../../services/languages";
+import { convertCSVToArray, createPrompt } from "../../../services/openia";
+import {
+  createQuestionQuiz,
+  createQuiz,
+  listQuiz,
+} from "../../../services/quiz";
+import { listVerbsById } from "../../../services/verbs";
 
 const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
 
