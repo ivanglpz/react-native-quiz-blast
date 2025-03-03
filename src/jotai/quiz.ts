@@ -11,7 +11,7 @@ export type IQUIZ_FORM = {
   answer: PrimitiveAtom<Partial<Answer> | null> &
     WithInitialValue<Partial<Answer> | null>;
   id: string;
-  isError: boolean;
+  isError: PrimitiveAtom<Partial<boolean>> & WithInitialValue<Partial<boolean>>;
 };
 
 export const GET_QUIZ_QUESTIONS_ATOM = atom<IQUIZ_FORM[]>([]);
@@ -26,7 +26,7 @@ export const SET_QUIZ_QUESTIONS_ATOM = atom(
         question: e,
         answer: atom<Partial<Answer> | null>(null),
         id: UUID,
-        isError: false,
+        isError: atom(false),
       };
     });
     set(GET_QUIZ_QUESTIONS_ATOM, questions);

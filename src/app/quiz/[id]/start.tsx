@@ -27,6 +27,7 @@ type Item = {
 
 const QuestionItem = ({ item, index }: Item) => {
   const [answer, setAnswer] = useAtom(item?.answer);
+  const [isError, setisError] = useAtom(item?.isError);
   return (
     <View
       style={{
@@ -55,6 +56,7 @@ const QuestionItem = ({ item, index }: Item) => {
             <TouchableOpacity
               key={`${e}${item?.id}${item?.question?.id}`}
               onPress={() => {
+                setisError(false);
                 setAnswer({
                   selected_option: e,
                   is_correct:
@@ -81,7 +83,7 @@ const QuestionItem = ({ item, index }: Item) => {
           );
         })}
       </View>
-      {item?.isError ? (
+      {isError ? (
         <Text
           style={{
             fontSize: 14,
@@ -173,6 +175,31 @@ const ScreenStartQuiz = () => {
           keyExtractor={(i) => i?.id}
           renderItem={({ item, index }) => {
             return <QuestionItem item={item} index={index} />;
+          }}
+          ListFooterComponent={() => {
+            return (
+              <TouchableOpacity
+                style={{
+                  width: "100%",
+                  backgroundColor: "black",
+                  paddingVertical: 10,
+                  paddingHorizontal: 15,
+                  borderRadius: 6,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Submit
+                </Text>
+              </TouchableOpacity>
+            );
           }}
         />
       </View>
