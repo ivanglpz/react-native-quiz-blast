@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { PrimitiveAtom, useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
 import {
   FlatList,
@@ -11,22 +11,17 @@ import {
   View,
 } from "react-native";
 import { Gap } from "../../../constants/styles";
-import { Answer, Question } from "../../../db/types";
+import { Question } from "../../../db/types";
 import {
   GET_QUIZ_QUESTIONS_ATOM,
+  IQUIZ_FORM,
   SET_QUIZ_QUESTIONS_ATOM,
-  WithInitialValue,
 } from "../../../jotai/quiz";
 import { fetchQuestions } from "../../../services/questions";
 import { fetchQuiz } from "../../../services/quiz";
 
 type Item = {
-  item: {
-    question: Question;
-    answer: PrimitiveAtom<Partial<Answer> | null> &
-      WithInitialValue<Partial<Answer> | null>;
-    id: string;
-  };
+  item: IQUIZ_FORM;
   index: number;
 };
 
@@ -86,6 +81,16 @@ const QuestionItem = ({ item, index }: Item) => {
           );
         })}
       </View>
+      {item?.isError ? (
+        <Text
+          style={{
+            fontSize: 14,
+            color: "red",
+          }}
+        >
+          Please select an option
+        </Text>
+      ) : null}
     </View>
   );
 };
@@ -98,7 +103,6 @@ const ScreenStartQuiz = () => {
     queryKey: ["quiz", local?.id],
     queryFn: () => fetchQuiz(db, local?.id),
   });
-  console.log(Quiz);
 
   const questions = useAtomValue(GET_QUIZ_QUESTIONS_ATOM);
   const setFormQuestions = useSetAtom(SET_QUIZ_QUESTIONS_ATOM);
@@ -115,6 +119,7 @@ const ScreenStartQuiz = () => {
     if (!local?.id) return;
     mutateFetchQuestions?.mutateAsync();
   }, [local?.id]);
+  const handleSubmit = async () => {};
   return (
     <SafeAreaView
       style={{

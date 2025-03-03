@@ -6,14 +6,15 @@ export type WithInitialValue<Value> = {
   init: Value;
 };
 
-export const GET_QUIZ_QUESTIONS_ATOM = atom<
-  {
-    question: Question;
-    answer: PrimitiveAtom<Partial<Answer> | null> &
-      WithInitialValue<Partial<Answer> | null>;
-    id: string;
-  }[]
->([]);
+export type IQUIZ_FORM = {
+  question: Question;
+  answer: PrimitiveAtom<Partial<Answer> | null> &
+    WithInitialValue<Partial<Answer> | null>;
+  id: string;
+  isError: boolean;
+};
+
+export const GET_QUIZ_QUESTIONS_ATOM = atom<IQUIZ_FORM[]>([]);
 
 export const SET_QUIZ_QUESTIONS_ATOM = atom(
   null,
@@ -25,6 +26,7 @@ export const SET_QUIZ_QUESTIONS_ATOM = atom(
         question: e,
         answer: atom<Partial<Answer> | null>(null),
         id: UUID,
+        isError: false,
       };
     });
     set(GET_QUIZ_QUESTIONS_ATOM, questions);
