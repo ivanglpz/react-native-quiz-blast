@@ -77,44 +77,26 @@ const AnswersQuiz = () => {
                   style={{
                     width: "100%",
                     backgroundColor: "#F6F6F6",
-                    height: 100,
                     borderWidth: 1,
                     borderColor: "#EEEEEE",
                     borderRadius: 6,
                     padding: 12,
                     display: "flex",
-                    flexDirection: "column",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <Text
+                  <Text style={{}}>{index + 1}. Answered Quiz</Text>
+                  <TouchableOpacity
                     style={{
-                      fontSize: 18,
-                      fontWeight: "bold",
+                      borderRadius: 6,
+                    }}
+                    onPress={() => {
+                      router.push(`./answers/${item?.id}`);
                     }}
                   >
-                    Quiz Answered #{index + 1}
-                  </Text>
-                  <View
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      width: "100%",
-                      justifyContent: "flex-end",
-                      gap: 12,
-                    }}
-                  >
-                    <TouchableOpacity
-                      style={{
-                        padding: 12,
-                        borderRadius: 6,
-                      }}
-                      onPress={() => {
-                        router.push(`./answers/${item?.id}`);
-                      }}
-                    >
-                      <Text>See Answers</Text>
-                    </TouchableOpacity>
-                  </View>
+                    <Text>See Answers</Text>
+                  </TouchableOpacity>
                 </View>
               );
             })}
