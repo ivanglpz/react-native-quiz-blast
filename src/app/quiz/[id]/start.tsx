@@ -4,6 +4,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Fragment, useEffect } from "react";
 import {
+  Alert,
   SafeAreaView,
   ScrollView,
   Text,
@@ -14,6 +15,7 @@ import { Gap } from "../../../constants/styles";
 import { Question } from "../../../db/types";
 import {
   GET_QUIZ_QUESTIONS_ATOM,
+  GET_RESULT_QUESTIONS,
   IQUIZ_FORM,
   SET_QUIZ_QUESTIONS_ATOM,
 } from "../../../jotai/quiz";
@@ -28,7 +30,6 @@ type Item = {
 const QuestionItem = ({ item, index }: Item) => {
   const [answer, setAnswer] = useAtom(item?.answer);
   const [isError, setisError] = useAtom(item?.isError);
-  console.log();
 
   return (
     <View
@@ -148,6 +149,7 @@ const ScreenStartQuiz = () => {
 
   const questions = useAtomValue(GET_QUIZ_QUESTIONS_ATOM);
   const setFormQuestions = useSetAtom(SET_QUIZ_QUESTIONS_ATOM);
+  const getAnswers = useSetAtom(GET_RESULT_QUESTIONS);
 
   const mutateFetchQuestions = useMutation({
     mutationKey: ["fetching_questions", local?.id, db],
@@ -161,7 +163,14 @@ const ScreenStartQuiz = () => {
     if (!local?.id) return;
     mutateFetchQuestions?.mutateAsync();
   }, [local?.id]);
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    const data = getAnswers?.();
+    if (data?.status === "error") {
+      Alert.alert("Error", "The form is not completed.");
+      return;
+    }
+    console.log(data);
+  };
   return (
     <SafeAreaView
       style={{
@@ -233,6 +242,7 @@ const ScreenStartQuiz = () => {
             alignItems: "center",
             justifyContent: "center",
           }}
+          onPress={handleSubmit}
         >
           <Text
             style={{

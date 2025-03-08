@@ -32,3 +32,29 @@ export const SET_QUIZ_QUESTIONS_ATOM = atom(
     set(GET_QUIZ_QUESTIONS_ATOM, questions);
   }
 );
+
+export const GET_RESULT_QUESTIONS = atom(null, (get, set) => {
+  const questions = get(GET_QUIZ_QUESTIONS_ATOM)?.map((e) => {
+    return {
+      ...e,
+      answer: get(e?.answer),
+    };
+  });
+
+  const isCompleted = questions.every((e) => e?.answer?.selected_option);
+  if (!isCompleted) {
+    for (const iterator of questions) {
+      if (!iterator?.answer?.question_id) {
+        set(iterator?.isError, true);
+      }
+    }
+    return {
+      status: "error",
+      data: [],
+    };
+  }
+  return {
+    status: "completed",
+    data: questions,
+  };
+});
