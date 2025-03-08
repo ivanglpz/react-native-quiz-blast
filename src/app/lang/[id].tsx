@@ -242,6 +242,9 @@ const LangScreen = () => {
                       padding: 12,
                       borderRadius: 6,
                     }}
+                    onPress={() => {
+                      router.push(`/quiz/${item?.id}/answers`);
+                    }}
                   >
                     <Text>Answers</Text>
                   </TouchableOpacity>

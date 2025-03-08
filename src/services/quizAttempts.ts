@@ -30,3 +30,13 @@ export const fetchQuizAttempt = async (
     id,
   ]);
 };
+
+export const ListhQuizAttempts = async (
+  db: SQLiteDatabase,
+  quiz_id: string
+): Promise<QuizAttempt[] | null> => {
+  return await db.getAllAsync(
+    "SELECT * FROM quiz_attempts  WHERE quiz_id = ?;",
+    [quiz_id]
+  );
+};
