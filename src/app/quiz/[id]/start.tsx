@@ -4,6 +4,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Fragment, useEffect } from "react";
 import {
+  ActivityIndicator,
   Alert,
   SafeAreaView,
   ScrollView,
@@ -163,14 +164,23 @@ const ScreenStartQuiz = () => {
     if (!local?.id) return;
     mutateFetchQuestions?.mutateAsync();
   }, [local?.id]);
-  const handleSubmit = async () => {
-    const data = getAnswers?.();
-    if (data?.status === "error") {
+
+  const mutate = useMutation({
+    mutationKey: ["submit", questions, getAnswers],
+    mutationFn: async () => {
+      const data = getAnswers?.();
+      if (data?.status === "error") {
+        throw new Error(`${data?.status}: The form is not completed.`);
+      }
+      return data;
+    },
+    onSuccess: (e) => {
+      console.log(e);
+    },
+    onError: () => {
       Alert.alert("Error", "The form is not completed.");
-      return;
-    }
-    console.log(data);
-  };
+    },
+  });
   return (
     <SafeAreaView
       style={{
@@ -242,16 +252,20 @@ const ScreenStartQuiz = () => {
             alignItems: "center",
             justifyContent: "center",
           }}
-          onPress={handleSubmit}
+          onPress={() => mutate.mutate()}
         >
-          <Text
-            style={{
-              color: "white",
-              fontWeight: "bold",
-            }}
-          >
-            Submit
-          </Text>
+          {mutate?.isPending ? (
+            <ActivityIndicator size={"small"} color={"white"} />
+          ) : (
+            <Text
+              style={{
+                color: "white",
+                fontWeight: "bold",
+              }}
+            >
+              Submit
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
