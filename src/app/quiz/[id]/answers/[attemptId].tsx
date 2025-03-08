@@ -2,6 +2,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
+import { useMemo } from "react";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { Gap } from "../../../../constants/styles";
 import { Answer } from "../../../../db/types";
@@ -22,7 +23,16 @@ const QuizAnswers = () => {
     queryFn: async () => listAnswersQuizAttempt(db, params?.attemptId),
   });
 
-  console.log(AnswersQuizAttempt);
+  const memoScore = useMemo(
+    () =>
+      AnswersQuizAttempt?.reduce((acc, curr) => {
+        if (curr?.is_correct) {
+          return acc + 1;
+        }
+        return acc;
+      }, 0),
+    [AnswersQuizAttempt]
+  );
 
   return (
     <SafeAreaView
@@ -39,7 +49,18 @@ const QuizAnswers = () => {
           flex: 1,
         }}
       >
-        <Text>hello world</Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+          }}
+        >
+          <Text style={{ fontSize: 12, opacity: 0.5 }}>{QuizAttempt?.id}</Text>
+          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
+            Quiz Result ({memoScore}/{AnswersQuizAttempt?.length})
+          </Text>
+        </View>
         <ScrollView
           style={{
             flex: 1,

@@ -26,8 +26,7 @@ export const fetchQuizAttempt = async (
   db: SQLiteDatabase,
   id: string
 ): Promise<QuizAttempt | null> => {
-  return await db.getFirstAsync(
-    "SELECT * FROM quiz_attempts JOIN questions WHERE id = ?;",
-    [id]
-  );
+  return await db.getFirstAsync("SELECT * FROM quiz_attempts  WHERE id = ?;", [
+    id,
+  ]);
 };
