@@ -103,11 +103,15 @@ const QuizAnswers = () => {
                       color={e?.is_correct ? "#87E561" : "#FF3C60"}
                     />
 
-                    {e?.question?.split(" ")?.map((i) => {
+                    {e?.question?.split(" ")?.map((i, index) => {
                       if (i.includes("_")) {
-                        return <Text key={i}>{e?.selected_option}</Text>;
+                        return (
+                          <Text key={i + "question" + index}>
+                            {e?.selected_option}
+                          </Text>
+                        );
                       }
-                      return <Text key={i}>{i}</Text>;
+                      return <Text key={i + "question" + index}>{i}</Text>;
                     })}
                   </View>
                   {!e?.is_correct ? (
@@ -127,15 +131,15 @@ const QuizAnswers = () => {
                           gap: 5,
                         }}
                       >
-                        {e?.question?.split(" ")?.map((i) => {
+                        {e?.question?.split(" ")?.map((i, index) => {
                           if (i.includes("_")) {
                             return (
-                              <Text key={i}>
+                              <Text key={i + index}>
                                 {e?.[e?.correct_answer as keyof Answer]}
                               </Text>
                             );
                           }
-                          return <Text key={i}>{i}</Text>;
+                          return <Text key={i + index}>{i}</Text>;
                         })}
                       </View>
                     </View>
