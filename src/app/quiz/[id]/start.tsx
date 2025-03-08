@@ -2,10 +2,10 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
 import {
-  FlatList,
   SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -28,6 +28,8 @@ type Item = {
 const QuestionItem = ({ item, index }: Item) => {
   const [answer, setAnswer] = useAtom(item?.answer);
   const [isError, setisError] = useAtom(item?.isError);
+  console.log();
+
   return (
     <View
       style={{
@@ -36,15 +38,49 @@ const QuestionItem = ({ item, index }: Item) => {
         gap: 12,
       }}
     >
-      <Text>
-        {index + 1}.{item?.question?.question}
-      </Text>
       <View
         style={{
           display: "flex",
           flexDirection: "row",
           flexWrap: "wrap",
-          gap: 6,
+          gap: 8,
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontWeight: "600",
+          }}
+        >
+          {index + 1}.
+        </Text>
+        {item?.question?.question?.split(" ")?.map((e) => {
+          if (e?.includes("_")) {
+            return (
+              <Text
+                style={{
+                  minWidth: 30,
+                  paddingHorizontal: 10,
+                  paddingVertical: 5,
+                  borderColor: "#46becb",
+                  backgroundColor: "#88dce5",
+                  borderWidth: 1,
+                  borderRadius: 6,
+                }}
+              >
+                {answer?.selected_option}
+              </Text>
+            );
+          }
+          return <Text>{e}</Text>;
+        })}
+      </View>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          gap: 12,
         }}
       >
         {[
@@ -73,9 +109,13 @@ const QuestionItem = ({ item, index }: Item) => {
                 borderRadius: 6,
                 borderWidth: 1,
                 borderColor:
-                  answer?.selected_option === e ? "#46becb" : "black",
+                  answer?.selected_option === e ? "#46becb" : "#e0e0e0",
                 backgroundColor:
                   answer?.selected_option === e ? "#88dce5" : "white",
+                flexGrow: 1,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <Text>{e}</Text>
@@ -134,74 +174,75 @@ const ScreenStartQuiz = () => {
           flexDirection: "column",
           gap: Gap.xxgl,
           padding: 20,
+          flex: 1,
         }}
       >
-        <FlatList
-          data={questions ?? []}
-          ListHeaderComponent={() => {
-            return (
-              <View
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginBottom: 15,
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: 22,
-                  }}
-                >
-                  {Quiz?.title}
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 17,
-                  }}
-                >
-                  {Quiz?.subtitle}
-                </Text>
-              </View>
-            );
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: 15,
           }}
-          ItemSeparatorComponent={() => (
-            <View
-              style={{
-                height: 20,
-              }}
-            />
-          )}
-          keyExtractor={(i) => i?.id}
-          renderItem={({ item, index }) => {
-            return <QuestionItem item={item} index={index} />;
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 22,
+            }}
+          >
+            {Quiz?.title}
+          </Text>
+          <Text
+            style={{
+              fontSize: 17,
+            }}
+          >
+            {Quiz?.subtitle}
+          </Text>
+        </View>
+        <ScrollView
+          style={{
+            flex: 1,
           }}
-          ListFooterComponent={() => {
-            return (
-              <TouchableOpacity
-                style={{
-                  width: "100%",
-                  backgroundColor: "black",
-                  paddingVertical: 10,
-                  paddingHorizontal: 15,
-                  borderRadius: 6,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    color: "white",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Submit
-                </Text>
-              </TouchableOpacity>
-            );
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 45,
+            }}
+          >
+            {[...(questions ?? [])]?.map((item, index) => {
+              return (
+                <Fragment key={index}>
+                  <QuestionItem item={item} index={index} />
+                </Fragment>
+              );
+            })}
+          </View>
+        </ScrollView>
+
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            backgroundColor: "black",
+            paddingVertical: 10,
+            paddingHorizontal: 15,
+            borderRadius: 6,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
+        >
+          <Text
+            style={{
+              color: "white",
+              fontWeight: "bold",
+            }}
+          >
+            Submit
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

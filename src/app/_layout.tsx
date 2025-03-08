@@ -6,7 +6,7 @@ const queryClient = new QueryClient();
 export default function HomeLayout() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SQLiteProvider databaseName="app_1.db" onInit={migrateDbIfNeeded}>
+      <SQLiteProvider databaseName="app_2.db" onInit={migrateDbIfNeeded}>
         <Slot />
       </SQLiteProvider>
     </QueryClientProvider>

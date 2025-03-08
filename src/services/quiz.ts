@@ -31,6 +31,15 @@ export const createQuestionQuiz = async (
   db: SQLiteDatabase,
   values: Omit<Question, "id">
 ) => {
+  if (
+    !values?.question ||
+    !values?.answer ||
+    !values?.option_one ||
+    !values?.option_three ||
+    !values?.option_two ||
+    !values?.quiz_id
+  )
+    return;
   const UUID = Crypto.randomUUID();
 
   const statement = await db.prepareAsync(
