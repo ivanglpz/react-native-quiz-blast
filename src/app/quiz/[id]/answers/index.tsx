@@ -1,3 +1,4 @@
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -44,7 +45,7 @@ const AnswersQuiz = () => {
           flex: 1,
         }}
       >
-        <BackHeader path={`/lang/${Quiz?.language_id}`} />
+        <BackHeader title={Quiz?.title ?? ""} />
 
         <View
           style={{
@@ -53,14 +54,6 @@ const AnswersQuiz = () => {
             marginBottom: 15,
           }}
         >
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 22,
-            }}
-          >
-            {Quiz?.title}
-          </Text>
           <Text
             style={{
               fontSize: 17,
@@ -127,6 +120,32 @@ const AnswersQuiz = () => {
             })}
           </View>
         </ScrollView>
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            backgroundColor: "#87E561",
+            paddingVertical: 10,
+            paddingHorizontal: 15,
+            borderRadius: 6,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+            gap: 10,
+          }}
+          onPress={() => router.push(`/quiz/${Quiz?.id}/start`)}
+        >
+          <Ionicons name="play" size={18} color="black" />
+
+          <Text
+            style={{
+              color: "black",
+              fontWeight: "bold",
+            }}
+          >
+            Start
+          </Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

@@ -219,7 +219,7 @@ const ScreenStartQuiz = () => {
           flex: 1,
         }}
       >
-        <BackHeader path={`/lang/${Quiz?.language_id}`} />
+        <BackHeader title={Quiz?.title ?? ""} />
 
         <View
           style={{
@@ -228,14 +228,6 @@ const ScreenStartQuiz = () => {
             marginBottom: 15,
           }}
         >
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 22,
-            }}
-          >
-            {Quiz?.title}
-          </Text>
           <Text
             style={{
               fontSize: 17,

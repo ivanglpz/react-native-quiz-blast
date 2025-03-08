@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import OpenAI from "openai";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -15,7 +15,6 @@ import {
 } from "react-native";
 import { BackHeader } from "../../components/BackHeader";
 import { InputSelect } from "../../components/input_select";
-import { Gap } from "../../constants/styles";
 import { fetchLanguage } from "../../services/languages";
 import { convertCSVToArray, createPrompt } from "../../services/openia";
 import { createQuestionQuiz, createQuiz, listQuiz } from "../../services/quiz";
@@ -31,6 +30,7 @@ const LangScreen = () => {
   const params = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();
   const router = useRouter();
+  const scrollRef = useRef<ScrollView>(null);
 
   const { data } = useQuery({
     queryKey: ["lang", db, params?.id],
@@ -74,7 +74,7 @@ const LangScreen = () => {
 
         const quiz = await createQuiz(db, {
           language_id: data?.id,
-          title: `${data?.name} Quiz #${DataListQuiz?.length ?? 1}`,
+          title: `${data?.name} Quiz #${Number(DataListQuiz?.length) + 1}`,
           subtitle: `${option?.name}`,
         });
         for (const iterator of questions) {
@@ -90,7 +90,15 @@ const LangScreen = () => {
       }
     },
     onSuccess: () => {
-      Alert.alert("Successfully", "The quiz has been created");
+      Alert.alert("Successfully", "The quiz has been created", [
+        {
+          isPreferred: true,
+          onPress: () => {
+            scrollRef.current?.scrollToEnd({ animated: true });
+          },
+          text: "OK",
+        },
+      ]);
     },
     onError: () => {
       Alert.alert("Error", "The quiz could'nt be created");
@@ -107,29 +115,18 @@ const LangScreen = () => {
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: Gap.xxgl,
           padding: 20,
+          gap: 12,
           flex: 1,
         }}
       >
-        <BackHeader path={`/`} />
+        <BackHeader path={`/`} title={`Quiz - ${data?.name}`} />
+        <Text>
+          Easily create your own quizzes and start testing your knowledge in no
+          time.
+        </Text>
 
-        <View>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 24,
-            }}
-          >
-            Quiz - {data?.name}
-          </Text>
-          <Text>
-            Easily create your own quizzes and start testing your knowledge in
-            no time.
-          </Text>
-        </View>
-
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView ref={scrollRef} style={{ flex: 1 }}>
           <View
             style={{
               display: "flex",

@@ -50,19 +50,11 @@ const QuizAnswers = () => {
           flex: 1,
         }}
       >
-        <BackHeader path={`/quiz/${params?.id}/answers`} />
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
-        >
-          <Text style={{ fontSize: 12, opacity: 0.5 }}>{QuizAttempt?.id}</Text>
-          <Text style={{ fontWeight: "bold", fontSize: 18 }}>
-            Quiz Result ({memoScore}/{AnswersQuizAttempt?.length})
-          </Text>
-        </View>
+        <BackHeader
+          title={`Quiz Result (${memoScore}/${AnswersQuizAttempt?.length})`}
+        />
+
+        <Text style={{ fontSize: 12, opacity: 0.5 }}>{QuizAttempt?.id}</Text>
         <ScrollView
           style={{
             flex: 1,

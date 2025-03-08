@@ -72,7 +72,7 @@ export const listQuiz = async (
     `SELECT * FROM quizzes WHERE language_id = ?`,
     [langId]
   )) as Quiz[];
-  return data?.reverse();
+  return data;
 };
 
 export const fetchQuiz = async (
