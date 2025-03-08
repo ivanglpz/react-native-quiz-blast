@@ -77,7 +77,7 @@ const QuizAnswers = () => {
           >
             {AnswersQuizAttempt?.map((e, index) => {
               return (
-                <View key={e?.id}>
+                <View key={e?.id + "AnswersQuizAttempt" + index}>
                   <Text>{index + 1}. Question</Text>
                   <Text>{e?.question}</Text>
                   <Text

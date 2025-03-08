@@ -80,6 +80,7 @@ const AnswersQuiz = () => {
             {data?.map?.((item, index) => {
               return (
                 <View
+                  key={item?.id}
                   style={{
                     width: "100%",
                     backgroundColor: "#F6F6F6",
