@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Fragment, useEffect } from "react";
@@ -20,8 +20,10 @@ import {
   IQUIZ_FORM,
   SET_QUIZ_QUESTIONS_ATOM,
 } from "../../../jotai/quiz";
+import { createAnswerQuizAttempt } from "../../../services/answers";
 import { fetchQuestions } from "../../../services/questions";
 import { fetchQuiz } from "../../../services/quiz";
+import { createQuizAttempts } from "../../../services/quizAttempts";
 
 type Item = {
   item: IQUIZ_FORM;
@@ -56,10 +58,11 @@ const QuestionItem = ({ item, index }: Item) => {
         >
           {index + 1}.
         </Text>
-        {item?.question?.question?.split(" ")?.map((e) => {
+        {item?.question?.question?.split(" ")?.map((e, index) => {
           if (e?.includes("_")) {
             return (
               <Text
+                key={e + index}
                 style={{
                   minWidth: 30,
                   paddingHorizontal: 10,
@@ -74,7 +77,7 @@ const QuestionItem = ({ item, index }: Item) => {
               </Text>
             );
           }
-          return <Text>{e}</Text>;
+          return <Text key={e + index}>{e}</Text>;
         })}
       </View>
       <View
@@ -143,6 +146,7 @@ const ScreenStartQuiz = () => {
   const local = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();
 
+  const router = useRouter();
   const { data: Quiz } = useQuery({
     queryKey: ["quiz", local?.id],
     queryFn: () => fetchQuiz(db, local?.id),
@@ -166,7 +170,7 @@ const ScreenStartQuiz = () => {
   }, [local?.id]);
 
   const mutate = useMutation({
-    mutationKey: ["submit", questions, getAnswers],
+    mutationKey: ["submit", questions, getAnswers, db, Quiz],
     mutationFn: async () => {
       const data = getAnswers?.();
       if (data?.status === "error") {
@@ -174,8 +178,27 @@ const ScreenStartQuiz = () => {
       }
       return data;
     },
-    onSuccess: (e) => {
-      console.log(e);
+    onSuccess: async ({ data }) => {
+      const newQuizAttempt = await createQuizAttempts(db, {
+        quiz_id: Quiz?.id,
+        user_id: "323a2a46-1b01-434f-bea0-0730ace3c1a3",
+      });
+      for await (const iterator of data) {
+        await createAnswerQuizAttempt(db, {
+          attempt_id: newQuizAttempt?.id,
+          is_correct: iterator?.answer?.is_correct,
+          question_id: iterator?.answer?.question_id,
+          selected_option: iterator?.answer?.selected_option,
+        });
+      }
+
+      router.push({
+        pathname: `./answers/[attemptId]`,
+        params: {
+          attemptId: newQuizAttempt?.id,
+        },
+      });
+      console.log(newQuizAttempt, "newQuizAttempt");
     },
     onError: () => {
       Alert.alert("Error", "The form is not completed.");
