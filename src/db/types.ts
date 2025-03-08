@@ -40,4 +40,5 @@ export type Answer = {
   question_id: string;
   selected_option: string;
   is_correct: boolean;
+  correct_answer?: string;
 };

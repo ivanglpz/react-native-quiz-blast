@@ -198,7 +198,6 @@ const ScreenStartQuiz = () => {
           attemptId: newQuizAttempt?.id,
         },
       });
-      console.log(newQuizAttempt, "newQuizAttempt");
     },
     onError: () => {
       Alert.alert("Error", "The form is not completed.");
