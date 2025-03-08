@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { BackHeader } from "../../../components/BackHeader";
 import { Gap } from "../../../constants/styles";
 import { Question } from "../../../db/types";
 import {
@@ -218,6 +219,8 @@ const ScreenStartQuiz = () => {
           flex: 1,
         }}
       >
+        <BackHeader path={`/lang/${Quiz?.language_id}`} />
+
         <View
           style={{
             display: "flex",

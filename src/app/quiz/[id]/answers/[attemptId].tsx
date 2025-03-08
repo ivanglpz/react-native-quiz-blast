@@ -4,6 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { BackHeader } from "../../../../components/BackHeader";
 import { Gap } from "../../../../constants/styles";
 import { Answer } from "../../../../db/types";
 import { listAnswersQuizAttempt } from "../../../../services/answers";
@@ -49,6 +50,7 @@ const QuizAnswers = () => {
           flex: 1,
         }}
       >
+        <BackHeader path={`/quiz/${params?.id}/answers`} />
         <View
           style={{
             display: "flex",

@@ -7,12 +7,13 @@ import { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  FlatList,
   SafeAreaView,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
+import { BackHeader } from "../../components/BackHeader";
 import { InputSelect } from "../../components/input_select";
 import { Gap } from "../../constants/styles";
 import { fetchLanguage } from "../../services/languages";
@@ -108,175 +109,176 @@ const LangScreen = () => {
           flexDirection: "column",
           gap: Gap.xxgl,
           padding: 20,
+          flex: 1,
         }}
       >
-        <FlatList
-          data={DataListQuiz}
-          keyExtractor={(i) => i?.id}
-          ListHeaderComponent={() => {
-            return (
-              <>
-                <View>
+        <BackHeader path={`/`} />
+
+        <View>
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 24,
+            }}
+          >
+            Quiz - {data?.name}
+          </Text>
+          <Text>
+            Easily create your own quizzes and start testing your knowledge in
+            no time.
+          </Text>
+        </View>
+
+        <ScrollView style={{ flex: 1 }}>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 18,
+            }}
+          >
+            {DataListQuiz?.map((item) => {
+              return (
+                <View
+                  key={item?.id}
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#F6F6F6",
+                    height: 100,
+                    borderWidth: 1,
+                    borderColor: "#EEEEEE",
+                    borderRadius: 6,
+                    padding: 12,
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
                   <Text
                     style={{
+                      fontSize: 18,
                       fontWeight: "bold",
-                      fontSize: 24,
                     }}
                   >
-                    Quiz - {data?.name}
+                    {item?.title}
                   </Text>
-                  <Text>
-                    Easily create your own quizzes and start testing your
-                    knowledge in no time.
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "flex-end",
-                    gap: 12,
-                  }}
-                >
-                  <InputSelect
-                    label="Verb Tense"
-                    value={optionVerbTenseId}
-                    onChange={(v) => {
-                      setoptionVerbTenseId(v?.value);
-                    }}
-                    options={ListVerbs?.map((e) => {
-                      return {
-                        id: e?.id,
-                        label: e?.name,
-                        value: e?.id,
-                      };
-                    })}
-                  />
-                  {(() => {
-                    const isDisabled =
-                      optionVerbTenseId === null ||
-                      optionVerbTenseId === undefined;
-                    return (
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: isDisabled ? "#e0e0e0" : "#151515",
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                          padding: 10,
-                          gap: 6,
-                          borderRadius: 6,
-                          width: "auto",
-                          height: "auto",
-                        }}
-                        disabled={isDisabled}
-                        onPress={() => mutate?.mutateAsync()}
-                      >
-                        {mutate?.isPending ? (
-                          <>
-                            <ActivityIndicator size={"small"} color={"white"} />
-                          </>
-                        ) : (
-                          <>
-                            <Ionicons
-                              name="add-circle"
-                              size={16}
-                              color={isDisabled ? "gray" : "#F6F6F6"}
-                            />
-                            <Text
-                              style={{
-                                color: isDisabled ? "gray" : "#F6F6F6",
-                                fontWeight: "700",
-                              }}
-                            >
-                              Create
-                            </Text>
-                          </>
-                        )}
-                      </TouchableOpacity>
-                    );
-                  })()}
-                </View>
-              </>
-            );
-          }}
-          ItemSeparatorComponent={() => {
-            return <View style={{ height: 15 }} />;
-          }}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  width: "100%",
-                  backgroundColor: "#F6F6F6",
-                  height: 100,
-                  borderWidth: 1,
-                  borderColor: "#EEEEEE",
-                  borderRadius: 6,
-                  padding: 12,
-                  display: "flex",
-                  flexDirection: "column",
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: "bold",
-                  }}
-                >
-                  {item?.title}
-                </Text>
-                <Text>{item?.subtitle}</Text>
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    width: "100%",
-                    justifyContent: "flex-end",
-                    gap: 12,
-                  }}
-                >
-                  <TouchableOpacity
+                  <Text>{item?.subtitle}</Text>
+                  <View
                     style={{
-                      padding: 12,
-                      borderRadius: 6,
-                    }}
-                    onPress={() => {
-                      router.push(`/quiz/${item?.id}/answers`);
-                    }}
-                  >
-                    <Text>Answers</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      paddingVertical: 8,
-                      paddingHorizontal: 15,
-                      backgroundColor: "#87E561",
-                      borderRadius: 6,
                       display: "flex",
                       flexDirection: "row",
-                      alignItems: "center",
-                      gap: 6,
-                    }}
-                    onPress={() => {
-                      router.push(`/quiz/${item?.id}/start`);
+                      width: "100%",
+                      justifyContent: "flex-end",
+                      gap: 12,
                     }}
                   >
-                    <Ionicons name="play" size={18} color="black" />
-                    <Text
+                    <TouchableOpacity
                       style={{
-                        fontWeight: "bold",
+                        padding: 12,
+                        borderRadius: 6,
+                      }}
+                      onPress={() => {
+                        router.push(`/quiz/${item?.id}/answers`);
                       }}
                     >
-                      Start
-                    </Text>
-                  </TouchableOpacity>
+                      <Text>Answers</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        paddingVertical: 8,
+                        paddingHorizontal: 15,
+                        backgroundColor: "#87E561",
+                        borderRadius: 6,
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 6,
+                      }}
+                      onPress={() => {
+                        router.push(`/quiz/${item?.id}/start`);
+                      }}
+                    >
+                      <Ionicons name="play" size={18} color="black" />
+                      <Text
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        Start
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            );
+              );
+            })}
+          </View>
+        </ScrollView>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            gap: 12,
           }}
-        />
+        >
+          <InputSelect
+            label="Verb Tense"
+            value={optionVerbTenseId}
+            onChange={(v) => {
+              setoptionVerbTenseId(v?.value);
+            }}
+            options={ListVerbs?.map((e) => {
+              return {
+                id: e?.id,
+                label: e?.name,
+                value: e?.id,
+              };
+            })}
+          />
+          {(() => {
+            const isDisabled =
+              optionVerbTenseId === null || optionVerbTenseId === undefined;
+            return (
+              <TouchableOpacity
+                style={{
+                  backgroundColor: isDisabled ? "#e0e0e0" : "#151515",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  padding: 10,
+                  gap: 6,
+                  borderRadius: 6,
+                  width: "auto",
+                  height: "auto",
+                }}
+                disabled={isDisabled}
+                onPress={() => mutate?.mutateAsync()}
+              >
+                {mutate?.isPending ? (
+                  <>
+                    <ActivityIndicator size={"small"} color={"white"} />
+                  </>
+                ) : (
+                  <>
+                    <Ionicons
+                      name="add-circle"
+                      size={16}
+                      color={isDisabled ? "gray" : "#F6F6F6"}
+                    />
+                    <Text
+                      style={{
+                        color: isDisabled ? "gray" : "#F6F6F6",
+                        fontWeight: "700",
+                      }}
+                    >
+                      Create
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            );
+          })()}
+        </View>
       </View>
     </SafeAreaView>
   );

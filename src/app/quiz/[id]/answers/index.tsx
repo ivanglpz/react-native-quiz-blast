@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { BackHeader } from "../../../../components/BackHeader";
 import { Gap } from "../../../../constants/styles";
 import { fetchQuiz } from "../../../../services/quiz";
 import { ListhQuizAttempts } from "../../../../services/quizAttempts";
@@ -43,6 +44,8 @@ const AnswersQuiz = () => {
           flex: 1,
         }}
       >
+        <BackHeader path={`/lang/${Quiz?.language_id}`} />
+
         <View
           style={{
             display: "flex",
