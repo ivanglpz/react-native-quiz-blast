@@ -9,12 +9,18 @@ import {
   View,
 } from "react-native";
 import { Gap } from "../../../../constants/styles";
+import { fetchQuiz } from "../../../../services/quiz";
 import { ListhQuizAttempts } from "../../../../services/quizAttempts";
 
 const AnswersQuiz = () => {
   const db = useSQLiteContext();
 
   const params = useLocalSearchParams<{ id: string }>();
+
+  const { data: Quiz } = useQuery({
+    queryKey: ["quizAttempt", params?.id],
+    queryFn: async () => fetchQuiz(db, params?.id),
+  });
 
   const { data } = useQuery({
     queryKey: ["list_answers_attempts", params?.id],
@@ -37,8 +43,29 @@ const AnswersQuiz = () => {
           flex: 1,
         }}
       >
-        <Text>hello world</Text>
-        <Text>{params?.id}</Text>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            marginBottom: 15,
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: "bold",
+              fontSize: 22,
+            }}
+          >
+            {Quiz?.title}
+          </Text>
+          <Text
+            style={{
+              fontSize: 17,
+            }}
+          >
+            {Quiz?.subtitle}
+          </Text>
+        </View>
         <ScrollView style={{ flex: 1 }}>
           <View
             style={{
