@@ -54,7 +54,6 @@ const QuizAnswers = () => {
           title={`Quiz Result (${memoScore}/${AnswersQuizAttempt?.length})`}
         />
 
-        <Text style={{ fontSize: 12, opacity: 0.5 }}>{QuizAttempt?.id}</Text>
         <ScrollView
           style={{
             flex: 1,
@@ -78,7 +77,7 @@ const QuizAnswers = () => {
                       marginTop: 10,
                     }}
                   >
-                    Your Answer
+                    Answer
                   </Text>
 
                   <View

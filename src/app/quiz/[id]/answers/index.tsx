@@ -47,7 +47,7 @@ const AnswersQuiz = () => {
       >
         <BackHeader title={Quiz?.title ?? ""} />
 
-        <View
+        {/* <View
           style={{
             display: "flex",
             flexDirection: "column",
@@ -61,7 +61,7 @@ const AnswersQuiz = () => {
           >
             {Quiz?.subtitle}
           </Text>
-        </View>
+        </View> */}
         <ScrollView style={{ flex: 1 }}>
           <View
             style={{
