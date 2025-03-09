@@ -11,8 +11,7 @@ export const createAnswerQuizAttempt = async (
   const statement = await db.prepareAsync(
     `
     INSERT INTO answers (id, attempt_id, question_id, selected_option, is_correct)
-    VALUES (?, ?, ?, ?, ?)
-    RETURNING id;
+    VALUES (?, ?, ?, ?, ?);
 
     `
   );

@@ -9,7 +9,7 @@ export const createQuiz = async (
   const UUID = Crypto.randomUUID();
 
   const statement = await db.prepareAsync(
-    "INSERT INTO quizzes (id, language_id, title, subtitle) VALUES (?, ?, ?, ?) RETURNING id"
+    "INSERT INTO quizzes (id, language_id, title, subtitle) VALUES (?, ?, ?, ?)"
   );
   try {
     await statement.executeAsync(
@@ -43,7 +43,7 @@ export const createQuestionQuiz = async (
   const UUID = Crypto.randomUUID();
 
   const statement = await db.prepareAsync(
-    "INSERT INTO questions (id, quiz_id, question, option_one, option_two, option_three, answer) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING id"
+    "INSERT INTO questions (id, quiz_id, question, option_one, option_two, option_three, answer) VALUES (?, ?, ?, ?, ?, ?, ?)"
   );
   try {
     await statement.executeAsync(

@@ -38,6 +38,7 @@ const LangScreen = () => {
     queryKey: ["lang", db, params?.id],
     queryFn: () => fetchLanguage(db, params?.id),
   });
+
   const { data: ListVerbs } = useQuery({
     queryKey: ["verbs", db, params?.id],
     queryFn: () => listVerbsById(db, params?.id),
