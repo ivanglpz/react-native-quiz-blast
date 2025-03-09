@@ -20,9 +20,8 @@ import { fetchLanguage } from "@services/languages";
 import { convertCSVToArray, createPrompt } from "@services/openia";
 import { createQuestionQuiz, createQuiz, listQuiz } from "@services/quiz";
 import { listVerbsById } from "@services/verbs";
-createPrompt;
 
-const API_KEY = process.env.EXPO_PUBLIC_API_KEY;
+const API_KEY = process?.env?.EXPO_PUBLIC_API_KEY ?? "";
 
 const client = new OpenAI({
   apiKey: API_KEY, // This is the default and can be omitted
@@ -30,7 +29,6 @@ const client = new OpenAI({
 
 const LangScreen = () => {
   const params = useLocalSearchParams<{ id: string }>();
-  console.log(params);
 
   const db = useSQLiteContext();
   const router = useRouter();
