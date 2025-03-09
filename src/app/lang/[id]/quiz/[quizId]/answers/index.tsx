@@ -18,17 +18,18 @@ import { ListhQuizAttempts } from "@services/quizAttempts";
 const AnswersQuiz = () => {
   const db = useSQLiteContext();
 
-  const params = useLocalSearchParams<{ id: string }>();
+  const params = useLocalSearchParams<{ quizId: string; id: string }>();
 
   const { data: Quiz } = useQuery({
-    queryKey: ["quizAttempt", params?.id],
-    queryFn: async () => fetchQuiz(db, params?.id),
+    queryKey: ["quizAttempt", params?.quizId],
+    queryFn: async () => fetchQuiz(db, params?.quizId),
   });
 
   const { data } = useQuery({
-    queryKey: ["list_answers_attempts", params?.id],
-    queryFn: async () => ListhQuizAttempts(db, params?.id),
+    queryKey: ["list_answers_attempts", params?.quizId],
+    queryFn: async () => ListhQuizAttempts(db, params?.quizId),
   });
+
   const router = useRouter();
 
   return (
@@ -48,21 +49,6 @@ const AnswersQuiz = () => {
       >
         <BackHeader title={Quiz?.title ?? ""} />
 
-        {/* <View
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            marginBottom: 15,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 17,
-            }}
-          >
-            {Quiz?.subtitle}
-          </Text>
-        </View> */}
         <ScrollView style={{ flex: 1 }}>
           <View
             style={{
@@ -116,7 +102,9 @@ const AnswersQuiz = () => {
             flexDirection: "row",
             gap: 10,
           }}
-          onPress={() => router.push(`/quiz/${Quiz?.id}/start`)}
+          onPress={() =>
+            router.push(`/lang/${params?.id}/quiz/${Quiz?.id}/start`)
+          }
         >
           <Ionicons name="play" size={18} color="black" />
 
@@ -126,7 +114,7 @@ const AnswersQuiz = () => {
               fontWeight: "bold",
             }}
           >
-            Start
+            Start keke
           </Text>
         </TouchableOpacity>
       </View>

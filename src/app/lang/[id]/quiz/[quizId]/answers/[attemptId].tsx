@@ -3,7 +3,6 @@ import { Gap } from "@constants/styles";
 import { Answer } from "@db/types";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { listAnswersQuizAttempt } from "@services/answers";
-import { fetchQuizAttempt } from "@services/quizAttempts";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -13,11 +12,7 @@ import { SafeAreaView, ScrollView, Text, View } from "react-native";
 const QuizAnswers = () => {
   const db = useSQLiteContext();
 
-  const params = useLocalSearchParams<{ id: string; attemptId: string }>();
-  const { data: QuizAttempt } = useQuery({
-    queryKey: ["quizAttempt", params?.attemptId],
-    queryFn: async () => fetchQuizAttempt(db, params?.attemptId),
-  });
+  const params = useLocalSearchParams<{ quizId: string; attemptId: string }>();
 
   const { data: AnswersQuizAttempt } = useQuery({
     queryKey: ["answersQuizAttempt", db, params?.attemptId],

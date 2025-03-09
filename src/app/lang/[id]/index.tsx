@@ -30,6 +30,8 @@ const client = new OpenAI({
 
 const LangScreen = () => {
   const params = useLocalSearchParams<{ id: string }>();
+  console.log(params);
+
   const db = useSQLiteContext();
   const router = useRouter();
   const scrollRef = useRef<ScrollView>(null);
@@ -176,7 +178,16 @@ const LangScreen = () => {
                         borderRadius: 6,
                       }}
                       onPress={() => {
-                        router.push(`/quiz/${item?.id}/answers`);
+                        router.push(
+                          {
+                            pathname: "/lang/[id]/quiz/[quizId]/answers",
+                            params: {
+                              id: params?.id,
+                              quizId: item.id,
+                            },
+                          }
+                          // `/lang/${params?.id}/quiz/${item?.id}/answers`
+                        );
                       }}
                     >
                       <Text>Answers</Text>
@@ -193,7 +204,9 @@ const LangScreen = () => {
                         gap: 6,
                       }}
                       onPress={() => {
-                        router.push(`./quiz/${item?.id}/start`);
+                        router.push(
+                          `/lang/${params?.id}/quiz/${item?.id}/start`
+                        );
                       }}
                     >
                       <Ionicons name="play" size={18} color="black" />

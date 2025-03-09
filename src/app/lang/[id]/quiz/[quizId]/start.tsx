@@ -144,13 +144,13 @@ const QuestionItem = ({ item, index }: Item) => {
 };
 
 const ScreenStartQuiz = () => {
-  const local = useLocalSearchParams<{ id: string }>();
+  const local = useLocalSearchParams<{ quizId: string }>();
   const db = useSQLiteContext();
 
   const router = useRouter();
   const { data: Quiz } = useQuery({
-    queryKey: ["quiz", local?.id],
-    queryFn: () => fetchQuiz(db, local?.id),
+    queryKey: ["quiz", local?.quizId],
+    queryFn: () => fetchQuiz(db, local?.quizId),
   });
 
   const questions = useAtomValue(GET_QUIZ_QUESTIONS_ATOM);
@@ -158,17 +158,17 @@ const ScreenStartQuiz = () => {
   const getAnswers = useSetAtom(GET_RESULT_QUESTIONS);
 
   const mutateFetchQuestions = useMutation({
-    mutationKey: ["fetching_questions", local?.id, db],
+    mutationKey: ["fetching_questions", local?.quizId, db],
     mutationFn: async () => {
-      const response = await fetchQuestions(db, local?.id);
+      const response = await fetchQuestions(db, local?.quizId);
       setFormQuestions(response);
     },
   });
 
   useEffect(() => {
-    if (!local?.id) return;
+    if (!local?.quizId) return;
     mutateFetchQuestions?.mutateAsync();
-  }, [local?.id]);
+  }, [local?.quizId]);
 
   const mutate = useMutation({
     mutationKey: ["submit", questions, getAnswers, db, Quiz],
