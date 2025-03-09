@@ -1,14 +1,14 @@
+import { BackHeader } from "@components/BackHeader";
+import { Gap } from "@constants/styles";
+import { Answer } from "@db/types";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { listAnswersQuizAttempt } from "@services/answers";
+import { fetchQuizAttempt } from "@services/quizAttempts";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { useMemo } from "react";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
-import { BackHeader } from "../../../../components/BackHeader";
-import { Gap } from "../../../../constants/styles";
-import { Answer } from "../../../../db/types";
-import { listAnswersQuizAttempt } from "../../../../services/answers";
-import { fetchQuizAttempt } from "../../../../services/quizAttempts";
 
 const QuizAnswers = () => {
   const db = useSQLiteContext();

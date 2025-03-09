@@ -9,10 +9,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { BackHeader } from "../../../../components/BackHeader";
-import { Gap } from "../../../../constants/styles";
-import { fetchQuiz } from "../../../../services/quiz";
-import { ListhQuizAttempts } from "../../../../services/quizAttempts";
+
+import { BackHeader } from "@components/BackHeader";
+import { Gap } from "@constants/styles";
+import { fetchQuiz } from "@services/quiz";
+import { ListhQuizAttempts } from "@services/quizAttempts";
 
 const AnswersQuiz = () => {
   const db = useSQLiteContext();

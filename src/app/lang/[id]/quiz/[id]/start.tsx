@@ -1,3 +1,16 @@
+import { BackHeader } from "@components/BackHeader";
+import { Gap } from "@constants/styles";
+import { Question } from "@db/types";
+import {
+  GET_QUIZ_QUESTIONS_ATOM,
+  GET_RESULT_QUESTIONS,
+  IQUIZ_FORM,
+  SET_QUIZ_QUESTIONS_ATOM,
+} from "@jotai/quiz";
+import { createAnswerQuizAttempt } from "@services/answers";
+import { fetchQuestions } from "@services/questions";
+import { fetchQuiz } from "@services/quiz";
+import { createQuizAttempts } from "@services/quizAttempts";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
@@ -12,19 +25,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { BackHeader } from "../../../components/BackHeader";
-import { Gap } from "../../../constants/styles";
-import { Question } from "../../../db/types";
-import {
-  GET_QUIZ_QUESTIONS_ATOM,
-  GET_RESULT_QUESTIONS,
-  IQUIZ_FORM,
-  SET_QUIZ_QUESTIONS_ATOM,
-} from "../../../jotai/quiz";
-import { createAnswerQuizAttempt } from "../../../services/answers";
-import { fetchQuestions } from "../../../services/questions";
-import { fetchQuiz } from "../../../services/quiz";
-import { createQuizAttempts } from "../../../services/quizAttempts";
 
 type Item = {
   item: IQUIZ_FORM;
